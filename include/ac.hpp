@@ -28,10 +28,27 @@ namespace ac {
         std::optional<std::string> weight;
     };
 
+    struct ImageSize {
+        ImageSize(auto value): value_{value} {}
+        ImageSize& operator=(std::string_view &src) {
+            value_ = src;
+            return *this;
+        }
+        bool operator==(ImageSize const &other) const = default;
+        operator std::string const&() const { return value_; }
+    private:
+        std::string value_;
+    };
+
     struct Image: public Element {
         static constexpr auto type_name = "Image";
         uri_t url;
-        std::optional<std::string> size;
+        std::optional<std::string> altText;
+        std::optional<std::string> backgroundColor;
+        std::optional<ImageSize> size;
+        void read_size(std::string_view value) {
+            size = value;
+        }
     };
 
 
@@ -40,9 +57,6 @@ namespace ac {
         std::string version;
         // Keep using json_t for body for simpler parsing
         void read_body(const glz::json_t& source);
-        auto write_body() const {
-            throw std::runtime_error("write_body not implemented");
-        }
         std::vector<std::shared_ptr<Element>> body;
     };
 

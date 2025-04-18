@@ -33,7 +33,7 @@ namespace glz {
         static constexpr auto value = object(
             "type", &T::type,
             "url", &T::url,
-            "size", &T::size
+            "size", custom<&T::read_size, nullptr>
         );
         static constexpr std::string_view name = "Image";
     };
@@ -44,7 +44,7 @@ namespace glz {
         static constexpr auto value = object(
             "type", &T::type,
             "version", &T::version,
-            "body", custom<&T::read_body, &T::write_body>
+            "body", custom<&T::read_body, nullptr>
         );
         static constexpr std::string_view name = "AdaptiveCard";
     };

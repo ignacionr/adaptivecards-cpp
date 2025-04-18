@@ -63,7 +63,7 @@ void check_card(const ac::AdaptiveCard& card) {
     assert(image != nullptr);
     assert(image->type == "Image");
     assert(image->url == "https://adaptivecards.io/content/cats/1.png");
-    assert(image->size == "Medium");
+    assert(image->size.value() == ac::ImageSize{"Medium"});
 }
 
 
