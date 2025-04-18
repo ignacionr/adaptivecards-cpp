@@ -20,6 +20,9 @@ FetchContent_MakeAvailable(glaze)
 
 
 # Add the executable
-add_executable(ac-test src/test.cpp)
+add_executable(ac-test 
+    src/test.cpp
+    src/ac.cpp
+)
 target_link_libraries(ac-test PRIVATE glaze::glaze)
 target_include_directories(ac-test PRIVATE include)

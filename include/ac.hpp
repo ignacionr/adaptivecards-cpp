@@ -6,7 +6,12 @@
 #include <variant>
 #include <vector>
 
-#include <glaze/json/json_t.hpp> // Include for json_t used below
+#include <glaze/glaze.hpp>
+#include <glaze/json.hpp>
+#include <glaze/json/read.hpp>
+#include <glaze/json/json_t.hpp>
+
+using namespace std::string_literals;
 
 namespace ac {
     using uri_t = std::string;
@@ -16,22 +21,9 @@ namespace ac {
         std::string type;
     };
 
-    using CardElementOriginal = std::variant<
-        std::shared_ptr<struct TextBlock>,
-        std::shared_ptr<struct Image>
-    >;
-
-    struct AdaptiveCard {
-        std::string type;
-        std::string version;
-        // Keep using json_t for body for simpler parsing
-        std::vector<glz::json_t> body;
-    };
-
     struct TextBlock: public Element {
         static constexpr auto type_name = "TextBlock";
         std::string text;
-        // USE OPTIONAL STRING
         std::optional<std::string> size;
         std::optional<std::string> weight;
     };
@@ -39,7 +31,19 @@ namespace ac {
     struct Image: public Element {
         static constexpr auto type_name = "Image";
         uri_t url;
-        // USE OPTIONAL STRING
         std::optional<std::string> size;
     };
+
+
+    struct AdaptiveCard {
+        std::string type;
+        std::string version;
+        // Keep using json_t for body for simpler parsing
+        void read_body(const glz::json_t& source);
+        auto write_body() const {
+            throw std::runtime_error("write_body not implemented");
+        }
+        std::vector<std::shared_ptr<Element>> body;
+    };
+
 } // namespace ac

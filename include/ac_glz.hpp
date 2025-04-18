@@ -44,7 +44,7 @@ namespace glz {
         static constexpr auto value = object(
             "type", &T::type,
             "version", &T::version,
-            "body", &T::body // Maps to vector<json_t>
+            "body", custom<&T::read_body, &T::write_body>
         );
         static constexpr std::string_view name = "AdaptiveCard";
     };

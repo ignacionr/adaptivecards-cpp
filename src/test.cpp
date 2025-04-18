@@ -51,37 +51,19 @@ void check_card(const ac::AdaptiveCard& card) {
     assert(card.version == "1.3");
     assert(card.body.size() == 2);
 
-    // --- Check first element (TextBlock) ---
-    assert(card.body[0].is_object());
-    // CORRECTED: Assume .as<T>() returns T directly or throws. Compare directly.
-    // Use try-catch if more robust error handling is needed outside assert.
-    assert(card.body[0]["type"].as<std::string_view>() == ac::TextBlock::type_name);
-
-    auto textBlockResult = glz::read_json<ac::TextBlock>(card.body[0]);
-    assert(textBlockResult);
-    if (textBlockResult) {
-        const auto& textBlock = *textBlockResult;
-        assert(textBlock.type == ac::TextBlock::type_name);
-        assert(textBlock.text == "Hello, Adaptive Cards!");
-        // CORRECTED: Check optional and access with value()
-        assert(textBlock.size.has_value() && textBlock.size.value() == "Large");
-        assert(textBlock.weight.has_value() && textBlock.weight.value() == "Bolder");
-    }
-
-    // --- Check second element (Image) ---
-     assert(card.body[1].is_object());
-    // CORRECTED: Assume .as<T>() returns T directly or throws. Compare directly.
-    assert(card.body[1]["type"].as<std::string_view>() == ac::Image::type_name);
-
-    auto imageResult = glz::read_json<ac::Image>(card.body[1]);
-    assert(imageResult);
-    if (imageResult) {
-        const auto& image = *imageResult;
-        assert(image.type == ac::Image::type_name);
-        assert(image.url == "https://adaptivecards.io/content/cats/1.png");
-        // CORRECTED: Check optional and access with value()
-        assert(image.size.has_value() && image.size.value() == "Medium");
-    }
+    // Check TextBlock
+    auto textBlock = std::dynamic_pointer_cast<ac::TextBlock>(card.body[0]);
+    assert(textBlock != nullptr);
+    assert(textBlock->type == "TextBlock");
+    assert(textBlock->text == "Hello, Adaptive Cards!");
+    assert(textBlock->size == "Large");
+    assert(textBlock->weight == "Bolder");
+    // Check Image
+    auto image = std::dynamic_pointer_cast<ac::Image>(card.body[1]);
+    assert(image != nullptr);
+    assert(image->type == "Image");
+    assert(image->url == "https://adaptivecards.io/content/cats/1.png");
+    assert(image->size == "Medium");
 }
 
 
