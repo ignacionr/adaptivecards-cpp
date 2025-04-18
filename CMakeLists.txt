@@ -18,11 +18,17 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(glaze)
 
+# Add the library
+add_library(adaptivecards-cpp
+  src/ac.cpp
+)
+target_link_libraries(adaptivecards-cpp PRIVATE glaze::glaze)
+target_include_directories(adaptivecards-cpp PUBLIC include)
 
 # Add the executable
 add_executable(ac-test 
     src/test.cpp
     src/ac.cpp
 )
-target_link_libraries(ac-test PRIVATE glaze::glaze)
+target_link_libraries(ac-test PRIVATE glaze::glaze adaptivecards-cpp)
 target_include_directories(ac-test PRIVATE include)
